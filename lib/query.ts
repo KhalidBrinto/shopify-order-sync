@@ -11,17 +11,52 @@ interface OrderNode {
     };
   };
   customer: {
+    id: string;
+    email: string;
     firstName: string;
     lastName: string;
-    email: string;
   };
   lineItems: {
     edges: Array<{
       node: {
         title: string;
         quantity: number;
+        priceSet: {
+          shopMoney: {
+            amount: string;
+          };
+        };
+        sku: string;
+        product: {
+          id: string;
+        };
+        variant: {
+          id: string;
+        };
       };
     }>;
+  };
+  shippingAddress: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    province: string;
+    zip: string;
+    country: string;
+    phone: string;
+  };
+  billingAddress: {
+    firstName: string;
+    lastName: string;
+    address1: string;
+    address2: string;
+    city: string;
+    province: string;
+    zip: string;
+    country: string;
+    phone: string;
   };
 }
 
@@ -41,31 +76,29 @@ interface OrdersResponse {
 export const fetchOrdersGraphQL = async (cursor?: string): Promise<OrdersResponse> => {
     const query = `
       {
-        orders(first: 5${cursor ? `, after: "${cursor}"` : ''}) {
+        orders(first: 10${cursor ? `, after: "${cursor}"` : ''}) {
           edges {
             cursor
             node {
               id
               name
               createdAt
-              totalPriceSet {
-                shopMoney {
-                  amount
-                  currencyCode
-                }
-              }
-              customer {
-                firstName
-                lastName
-                email
-              }
-              lineItems(first: 5) {
+              totalPriceSet { shopMoney { amount currencyCode } }
+              customer { id email firstName lastName }
+              lineItems(first: 100) {
                 edges {
                   node {
                     title
                     quantity
+                    sku
                   }
                 }
+              }
+              shippingAddress {
+                firstName lastName address1 address2 city province zip country phone
+              }
+              billingAddress {
+                firstName lastName address1 address2 city province zip country phone
               }
             }
           }
@@ -76,8 +109,7 @@ export const fetchOrdersGraphQL = async (cursor?: string): Promise<OrdersRespons
         }
       }
     `;
-  
+
     const response = await shopify.graphql(query);
     return response as OrdersResponse;
-  };
-  
+};
