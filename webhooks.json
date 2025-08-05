@@ -1,0 +1,30 @@
+{
+    "webhooks": [
+      {
+        "id": 1735560954134,
+        "address": "https://00eef9a58045.ngrok-free.app/api/webhook/orders-create",
+        "topic": "orders/create",
+        "created_at": "2025-08-05T03:05:59-04:00",
+        "updated_at": "2025-08-05T03:05:59-04:00",
+        "format": "json",
+        "fields": [],
+        "metafield_namespaces": [],
+        "api_version": "2025-07",
+        "private_metafield_namespaces": [],
+        "metafield_identifiers": []
+      },
+      {
+        "id": 1735560986902,
+        "address": "https://00eef9a58045.ngrok-free.app/api/webhook/orders-edited",
+        "topic": "orders/edited",
+        "created_at": "2025-08-05T03:05:59-04:00",
+        "updated_at": "2025-08-05T03:05:59-04:00",
+        "format": "json",
+        "fields": [],
+        "metafield_namespaces": [],
+        "api_version": "2025-07",
+        "private_metafield_namespaces": [],
+        "metafield_identifiers": []
+      }
+    ]
+  }

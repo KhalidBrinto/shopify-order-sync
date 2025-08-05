@@ -21,18 +21,7 @@ interface OrderNode {
       node: {
         title: string;
         quantity: number;
-        priceSet: {
-          shopMoney: {
-            amount: string;
-          };
-        };
         sku: string;
-        product: {
-          id: string;
-        };
-        variant: {
-          id: string;
-        };
       };
     }>;
   };
