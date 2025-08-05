@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useSocket } from "@/hooks/useSocket";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +21,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { ChevronDown, ChevronUp, ChevronsUpDown, Eye, X, Filter, Search } from "lucide-react";
+import { useSocket } from "@/hooks/useSocket";
 
 interface Customer {
   id: number;
@@ -96,7 +96,12 @@ interface Filters {
   maxPrice: string;
 }
 
-export default function OrdersPage() {
+interface OrdersPageProps {
+  refreshKey: number;
+}
+
+export default function OrdersPage({ refreshKey }: OrdersPageProps) {
+  
   const [orders, setOrders] = useState<Order[]>([]);
   const [allOrders, setAllOrders] = useState<Order[]>([]);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
@@ -136,20 +141,11 @@ export default function OrdersPage() {
     }
   };
 
+
   useEffect(() => {
     fetchOrders(currentPage);
-  }, [currentPage]);
+  }, [refreshKey, currentPage]);
 
-  useSocket(
-    (order) => {
-      // Refresh orders when a new order arrives
-      console.log('New order received, refreshing orders...');
-      fetchOrders(currentPage);
-    },
-    (status) => {
-      setIsSyncing(status);
-    }
-  );
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);

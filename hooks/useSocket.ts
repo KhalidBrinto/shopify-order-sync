@@ -1,8 +1,7 @@
 // src/hooks/useSocket.ts
 import { useEffect } from 'react';
-import { io, Socket } from 'socket.io-client';
+import { socketClient as socket} from '@/lib/socket-client';
 
-let socket: Socket | null = null;
 
 
 export const useSocket = (
@@ -10,28 +9,28 @@ export const useSocket = (
   onSyncStatus?: (status: boolean) => void
 ) => {
   useEffect(() => {
-    socket = io('http://localhost:4000');
 
     socket.on('connect', () => {
-      console.log('Connected to WebSocket server');
+      console.log('Connected to WebSocket server, CLient id: ', socket?.id);
     });
 
-    socket.on('new-order', (order: boolean) => {
+    socket.on('order-created', (order: boolean) => {
       console.log('New order received');
+      onNewOrder(order);
+    });
+    socket.on('order-updated', (order: boolean) => {
+      console.log('order update request received');
       onNewOrder(order);
     });
 
     socket.on('sync-status', (status: boolean) => {
-      console.log('🔄 Sync status update:', status);
-      onSyncStatus?.(status); // only call if callback is provided
+      console.log('Sync status update:', status);
+      onSyncStatus?.(status);
     });
 
     socket.on('disconnect', () => {
       console.log('🔴 Disconnected from WebSocket server');
     });
 
-    return () => {
-      socket?.disconnect();
-    };
   }, [onNewOrder, onSyncStatus]);
 };

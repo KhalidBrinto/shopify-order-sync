@@ -29,6 +29,7 @@ interface OrderNode {
   id: string;
   name: string;
   createdAt: string;
+  fulfillmentStatus: string;
   totalPriceSet?: {
     shopMoney?: {
       amount: string;
@@ -90,7 +91,7 @@ const processAndStoreOrder = async (orderNode: OrderNode) => {
         ? parseFloat(orderNode.totalPriceSet.shopMoney.amount) 
         : null,
       currency: orderNode.totalPriceSet?.shopMoney?.currencyCode || 'USD',
-      orderStatus: 'pending', // Default status
+      orderStatus: orderNode.fulfillmentStatus, // Default status
       createdAt: new Date(orderNode.createdAt),
     };
 
@@ -237,7 +238,6 @@ const syncOrders = async () => {
       const orders = result.orders.edges;
       console.log(`Processing ${orders.length} orders...`);
 
-      // Process each order in the current page
       for (const edge of orders) {
         try {
           const existingOrder = await prisma.order.findUnique({

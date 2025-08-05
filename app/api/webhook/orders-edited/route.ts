@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyShopifyWebhook } from '@/lib/verify-webhook';
 import { PrismaClient } from '@prisma/client';
-import { emitNewOrder } from '@/lib/websocket-server';
+import { socketClient as socket} from '@/lib/socket-client';
 
 const prisma = new PrismaClient();
 
@@ -61,9 +61,9 @@ export async function POST(req: NextRequest) {
         quantity: { lte: 0 }
       }
     });
+
     console.log("Order updated");
-    console.log("Emitting update event to websocket");
-    emitNewOrder(true);
+    socket.emit('on-order-update', true)
     return new NextResponse('OK', { status: 200 });
   } catch (error) {
     console.error('Error processing order edit:', error);

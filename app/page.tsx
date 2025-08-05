@@ -15,19 +15,11 @@ interface SyncResult {
 }
 
 export default function Home() {
-  const [orders, setOrders] = useState<unknown[]>([]);
   const [isSyncing, setIsSyncing] = useState(false);
   const [isSyncLoading, setIsSyncLoading] = useState(false);
   const [syncResult, setSyncResult] = useState<SyncResult | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  useSocket(
-    (order) => {
-      setOrders((prev) => [order, ...prev]);
-    },
-    (status) => {
-      setIsSyncing(status);
-    }
-  );
 
   const startOrderSync = async () => {
     try {
@@ -62,6 +54,16 @@ export default function Home() {
       setIsSyncLoading(false);
     }
   };
+
+  useSocket(
+    (order) => {
+      console.log("New order received");
+      setRefreshKey((prev) => prev + 1);
+    },
+    (status) => {
+      setIsSyncing(status);
+    }
+  );
 
   return (
     <div className="min-h-screen w-full">
@@ -126,7 +128,7 @@ export default function Home() {
           </div>
         )}
         
-        <OrdersPage/>
+        <OrdersPage refreshKey={refreshKey}/>
       </div>
     </div>
   );
