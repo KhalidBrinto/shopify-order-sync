@@ -4,7 +4,7 @@ interface OrderNode {
   id: string;
   name: string;
   createdAt: string;
-  fulfillmentStatus: string;
+  closed: boolean;
   totalPriceSet: {
     shopMoney: {
       amount: string;
@@ -73,7 +73,7 @@ export const fetchOrdersGraphQL = async (cursor?: string): Promise<OrdersRespons
               id
               name
               createdAt
-              fulfillmentStatus
+              closed
               totalPriceSet { shopMoney { amount currencyCode } }
               customer { id email firstName lastName }
               lineItems(first: 100) {

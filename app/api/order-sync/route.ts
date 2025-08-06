@@ -29,7 +29,7 @@ interface OrderNode {
   id: string;
   name: string;
   createdAt: string;
-  fulfillmentStatus: string;
+  closed: boolean;
   totalPriceSet?: {
     shopMoney?: {
       amount: string;
@@ -91,7 +91,7 @@ const processAndStoreOrder = async (orderNode: OrderNode) => {
         ? parseFloat(orderNode.totalPriceSet.shopMoney.amount) 
         : null,
       currency: orderNode.totalPriceSet?.shopMoney?.currencyCode || 'USD',
-      orderStatus: orderNode.fulfillmentStatus, // Default status
+      orderStatus: orderNode.closed ? 'completed':'pending', // Default status
       createdAt: new Date(orderNode.createdAt),
     };
 

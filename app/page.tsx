@@ -4,6 +4,8 @@ import { useSocket } from "@/hooks/useSocket";
 import { useState } from "react";
 import Link from "next/link";
 import OrdersPage from "@/components/orderPage";
+import WebhookManager from "@/components/webhook";
+import { Button } from "@/components/ui/button";
 
 interface SyncResult {
   success: boolean;
@@ -67,12 +69,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen w-full">
-      <h1 className="text-3xl font-bold text-center py-20">Shopify Order Sync</h1>
+      <h1 className="text-3xl font-bold text-center pt-20">Shopify Order Sync</h1>
       <div className="text-center space-y-4">
+
+      <WebhookManager/>
         
         {/* Order Sync Button */}
-        <div className="flex justify-center">
-          <button
+        <div className="flex justify-center pt-5">
+          <Button
             onClick={startOrderSync}
             disabled={isSyncLoading || isSyncing}
             className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
@@ -85,7 +89,7 @@ export default function Home() {
             ) : (
               'Start Order Sync'
             )}
-          </button>
+          </Button>
         </div>
 
         {/* Sync Results */}
